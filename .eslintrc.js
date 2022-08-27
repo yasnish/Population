@@ -22,6 +22,15 @@ module.exports = {
   rules: {
     'react/prop-types': 'off',
     'react/react-in-jsx-scope': 'off',
+    'sort-imports': 'off',
+    'import/order': [
+      'error',
+      {
+        alphabetize: { order: 'asc' },
+        'newlines-between': 'always',
+      },
+    ],
+    'no-console': 'error',
   },
   settings: {
     react: {
