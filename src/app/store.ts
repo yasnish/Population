@@ -1,9 +1,10 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
-import counterReducer from '../features/counter/counterSlice';
 import logger from 'redux-logger';
 
+import populationReducer from '../features/population/populationSlice';
+
 const reducer = {
-  counter: counterReducer,
+  population: populationReducer,
 };
 const preloadedState = {};
 
