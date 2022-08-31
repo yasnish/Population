@@ -30,7 +30,7 @@ module.exports = {
         'newlines-between': 'always',
       },
     ],
-    'no-console': 'error',
+    'no-console': 'warn',
   },
   settings: {
     react: {
