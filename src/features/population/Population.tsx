@@ -3,6 +3,7 @@ import { FC, useEffect, useRef } from 'react';
 import { useAppDispatch } from '../../app/hooks';
 
 import styles from './Population.module.css';
+import { PopulationGraph } from './components/PopulationGraph';
 import { PrefectureList } from './components/PrefectureList';
 import { getPrefectures } from './populationSlice';
 
@@ -11,6 +12,7 @@ export const Population: FC = () => {
 
   // for called twice in StrictMode
   const firstUpdate = useRef(true);
+
   useEffect(() => {
     if (firstUpdate.current) {
       firstUpdate.current = false;
@@ -22,6 +24,9 @@ export const Population: FC = () => {
   return (
     <div>
       <div className={styles.row}>
+        <PopulationGraph />
+      </div>
+      <div>
         <PrefectureList />
       </div>
     </div>

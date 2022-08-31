@@ -1,10 +1,17 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import {
+  createAsyncThunk,
+  createSlice,
+  createSelector,
+  PayloadAction,
+} from '@reduxjs/toolkit';
 
 import { RootState } from '../../app/store';
 
 import { fetchPrefectures, fetchCompositions } from './populationAPI';
 
-export type PrefCode = number;
+export type PrefCode = string;
+export type Year = string;
+export type Population = number;
 export type Prefecture = {
   prefCode: PrefCode;
   prefName: string;
@@ -12,18 +19,21 @@ export type Prefecture = {
 
 export type CompositionData = {
   label: string;
-  data: Array<{ year: number; value: number }>;
+  data: Array<{ year: Year; value: Population }>;
 };
 
 export interface PopulationState {
   prefectures: Prefecture[];
-  compositions: Record<PrefCode, CompositionData>;
+  compositions: Record<PrefCode, Record<Year, Population>>;
+  checkedPrefs: PrefCode[];
+  //TODO define status as constants
   status: 'idle' | 'loading' | 'failed';
 }
 
 const initialState: PopulationState = {
   prefectures: [],
   compositions: {},
+  checkedPrefs: [],
   status: 'idle',
 };
 
@@ -46,7 +56,22 @@ export const getCompositions = createAsyncThunk(
 export const populationSlice = createSlice({
   name: 'population',
   initialState,
-  reducers: {},
+  reducers: {
+    setCheckedPrefs: (
+      state,
+      action: PayloadAction<{ prefCode: PrefCode; checked: boolean }>
+    ) => {
+      const { prefCode, checked } = action.payload;
+      const checkedPrefSet = new Set<PrefCode>(state.checkedPrefs);
+      if (checked) {
+        checkedPrefSet.add(prefCode);
+      } else {
+        checkedPrefSet.delete(prefCode);
+      }
+      state.checkedPrefs = [...checkedPrefSet];
+    },
+  },
+
   extraReducers: (builder) => {
     builder
       .addCase(getPrefectures.pending, (state) => {
@@ -65,7 +90,14 @@ export const populationSlice = createSlice({
       .addCase(getCompositions.fulfilled, (state, action) => {
         state.status = 'idle';
         const prefCode = action.meta.arg;
-        state.compositions[prefCode] = action.payload.compositions?.[0];
+        const totalPopulation = action.payload.compositions?.[0]?.data;
+
+        // when invalid data
+        if (!totalPopulation) return;
+
+        state.compositions[prefCode] = totalPopulation.reduce((prev, curr) => {
+          return { ...prev, [`${curr.year}`]: curr.value };
+        }, {});
       })
       .addCase(getCompositions.rejected, (state) => {
         state.status = 'failed';
@@ -73,10 +105,51 @@ export const populationSlice = createSlice({
   },
 });
 
+export const { setCheckedPrefs } = populationSlice.actions;
+
 export const selectPrefectures = (state: RootState) =>
   state.population.prefectures;
 
 export const selectCompositions = (state: RootState) =>
   state.population.compositions;
+
+export const selectCheckedPrefs = (state: RootState) =>
+  state.population.checkedPrefs;
+
+export const selectPrefectureMap = createSelector(
+  selectPrefectures,
+  (prefectures): Record<PrefCode, string> => {
+    return prefectures.reduce((prev, curr) => {
+      return { ...prev, [curr.prefCode]: curr.prefName };
+    }, {});
+  }
+);
+
+export const selectPopulationData = createSelector(
+  selectCheckedPrefs,
+  selectCompositions,
+  (checkedPrefs, compositions) => {
+    // when all not checked
+    if (checkedPrefs.length === 0) {
+      return [];
+    }
+
+    const populationData: {
+      [key: Year]: { [key: PrefCode]: Population };
+    } = {};
+    checkedPrefs.forEach((prefCode) => {
+      const data = compositions[prefCode] || {};
+      Object.entries(data).forEach(([year, population]) => {
+        populationData[year] = {
+          ...populationData[year],
+          [prefCode]: population,
+        };
+      });
+    });
+    return Object.keys(populationData).map((year) => {
+      return { year, ...populationData[year] };
+    });
+  }
+);
 
 export default populationSlice.reducer;

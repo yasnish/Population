@@ -1,19 +1,21 @@
-import { FC, useCallback, useState } from 'react';
+import { FC, useCallback, useMemo } from 'react';
 
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import {
   PrefCode,
   Prefecture,
   getCompositions,
+  selectCheckedPrefs,
   selectCompositions,
   selectPrefectures,
+  setCheckedPrefs,
 } from '../populationSlice';
 
 export const PrefectureList: FC = () => {
   const prefectures = useAppSelector(selectPrefectures);
+  const checkedPrefs = useAppSelector(selectCheckedPrefs);
   const compositions = useAppSelector(selectCompositions);
   const dispatch = useAppDispatch();
-  const [checkedItems, setCheckedItems] = useState(new Set());
 
   const fetchCompositions = useCallback(
     (prefCode: PrefCode) => {
@@ -24,18 +26,15 @@ export const PrefectureList: FC = () => {
     },
     [compositions, dispatch]
   );
+  const checkedPrefSet = useMemo(() => new Set(checkedPrefs), [checkedPrefs]);
   const handleChange = useCallback(
-    (prefCode: PrefCode) => {
-      const newCheckedItems = new Set(checkedItems);
-      if (checkedItems.has(prefCode)) {
-        newCheckedItems.delete(prefCode);
-      } else {
-        newCheckedItems.add(prefCode);
+    (prefCode: PrefCode, checked: boolean) => {
+      if (!checkedPrefSet.has(prefCode)) {
         fetchCompositions(prefCode);
       }
-      setCheckedItems(newCheckedItems);
+      dispatch(setCheckedPrefs({ prefCode, checked }));
     },
-    [checkedItems, fetchCompositions]
+    [checkedPrefSet, dispatch, fetchCompositions]
   );
 
   const checkBoxes = prefectures.map(({ prefCode, prefName }: Prefecture) => {
@@ -44,8 +43,8 @@ export const PrefectureList: FC = () => {
         <input
           type="checkbox"
           value={prefCode}
-          checked={checkedItems.has(prefCode)}
-          onChange={() => handleChange(prefCode)}
+          checked={checkedPrefSet.has(prefCode)}
+          onChange={(e) => handleChange(prefCode, e.target.checked)}
         />
         <span>{prefName}</span>
       </label>
