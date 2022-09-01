@@ -17,11 +17,6 @@ export type Prefecture = {
   prefName: string;
 };
 
-export type CompositionData = {
-  label: string;
-  data: Array<{ year: Year; value: Population }>;
-};
-
 export interface PopulationState {
   prefectures: Prefecture[];
   compositions: Record<PrefCode, Record<Year, Population>>;
@@ -79,7 +74,13 @@ export const populationSlice = createSlice({
       })
       .addCase(getPrefectures.fulfilled, (state, action) => {
         state.status = 'idle';
-        state.prefectures = action.payload.prefectures;
+        // convert prefCode to string
+        state.prefectures = action.payload.prefectures.map((prefecture) => {
+          return {
+            prefCode: String(prefecture.prefCode),
+            prefName: prefecture.prefName,
+          };
+        });
       })
       .addCase(getPrefectures.rejected, (state) => {
         state.status = 'failed';

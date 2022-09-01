@@ -1,8 +1,12 @@
-import { Prefecture, PrefCode, CompositionData } from './populationSlice';
+import { PrefCode } from './populationSlice';
 const RESAS_API_KEY = process.env.REACT_APP_RESAS_API_KEY || '<YOUR_API_KEY>';
 const RESAS_DOMAIN = 'https://opendata.resas-portal.go.jp';
 
 // TODO fetch部分の共通化
+type Prefecture = {
+  prefCode: number;
+  prefName: string;
+};
 export const fetchPrefectures = () => {
   return new Promise<{ prefectures: Prefecture[] }>((resolve, reject) => {
     const url = `${RESAS_DOMAIN}/api/v1/prefectures`;
@@ -22,8 +26,12 @@ export const fetchPrefectures = () => {
   });
 };
 
+type Composition = {
+  label: string;
+  data: Array<{ year: number; value: number }>;
+};
 export const fetchCompositions = (prefCode: PrefCode) => {
-  return new Promise<{ compositions: CompositionData[] }>((resolve, reject) => {
+  return new Promise<{ compositions: Composition[] }>((resolve, reject) => {
     const api = `${RESAS_DOMAIN}/api/v1/population/composition/perYear`;
     const params = { prefCode: String(prefCode), cityCode: '-' };
     const searchParams = new URLSearchParams(params).toString();
