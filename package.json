@@ -55,5 +55,6 @@
       "eslint --cache --fix --max-warnings=0",
       "prettier --write"
     ]
-  }
+  },
+  "homepage": "/Population/"
 }
