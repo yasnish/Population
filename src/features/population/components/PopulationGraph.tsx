@@ -80,16 +80,13 @@ export const PopulationGraph: FC = () => {
   );
 
   return (
-    <ResponsiveContainer width="70%" height={300}>
+    <ResponsiveContainer width="100%" height={300}>
       <LineChart
-        width={500}
-        height={300}
         data={populationData}
         margin={{
-          top: 30,
-          right: 100,
-          left: 150,
-          bottom: 5,
+          right: 50,
+          left: 10,
+          bottom: 20,
         }}
       >
         <CartesianGrid strokeDasharray="3 3" />

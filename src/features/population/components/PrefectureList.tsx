@@ -11,6 +11,8 @@ import {
   setCheckedPrefs,
 } from '../populationSlice';
 
+import styles from './PrefectureList.module.css';
+
 export const PrefectureList: FC = () => {
   const prefectures = useAppSelector(selectPrefectures);
   const checkedPrefs = useAppSelector(selectCheckedPrefs);
@@ -26,6 +28,7 @@ export const PrefectureList: FC = () => {
     },
     [compositions, dispatch]
   );
+
   const checkedPrefSet = useMemo(() => new Set(checkedPrefs), [checkedPrefs]);
   const handleChange = useCallback(
     (prefCode: PrefCode, checked: boolean) => {
@@ -37,18 +40,25 @@ export const PrefectureList: FC = () => {
     [checkedPrefSet, dispatch, fetchCompositions]
   );
 
-  const checkBoxes = prefectures.map(({ prefCode, prefName }: Prefecture) => {
-    return (
-      <label key={prefCode}>
-        <input
-          type="checkbox"
-          value={prefCode}
-          checked={checkedPrefSet.has(prefCode)}
-          onChange={(e) => handleChange(prefCode, e.target.checked)}
-        />
-        <span>{prefName}</span>
-      </label>
-    );
-  });
-  return <div>{checkBoxes}</div>;
+  const checkBoxes = useMemo(
+    () =>
+      prefectures.map(({ prefCode, prefName }: Prefecture) => {
+        return (
+          <li key={prefCode} className={styles.item}>
+            <label>
+              <input
+                type="checkbox"
+                value={prefCode}
+                checked={checkedPrefSet.has(prefCode)}
+                onChange={(e) => handleChange(prefCode, e.target.checked)}
+              />
+              <span>{prefName}</span>
+            </label>
+          </li>
+        );
+      }),
+    [checkedPrefSet, handleChange, prefectures]
+  );
+
+  return <ul className={styles.list}>{checkBoxes}</ul>;
 };

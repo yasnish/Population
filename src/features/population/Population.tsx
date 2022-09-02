@@ -22,11 +22,11 @@ export const Population: FC = () => {
   }, []);
 
   return (
-    <div>
-      <div className={styles.row}>
+    <div className={styles.wrapper}>
+      <div className={styles.main}>
         <PopulationGraph />
       </div>
-      <div>
+      <div className={styles.side}>
         <PrefectureList />
       </div>
     </div>
