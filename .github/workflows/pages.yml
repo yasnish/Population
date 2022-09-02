@@ -35,8 +35,10 @@ jobs:
         run: npm install
       - name: Build
         run: npm run build
-      - name: Create .nojekyll
-        run: touch build/.nojekyll
+      - name: Create .env
+        run: |
+          touch .env
+          echo REACT_APP_RESAS_API_KEY=${{ secrets.REACT_APP_RESAS_API_KEY }} >> .env
       - name: Setup Pages
         uses: actions/configure-pages@v2
       - name: Build with Jekyll
