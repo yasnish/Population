@@ -1,4 +1,5 @@
 import populationReducer, {
+  emptyPopulationData,
   getCompositions,
   getPrefectures,
   PopulationState,
@@ -171,19 +172,19 @@ describe('population slice', () => {
         },
       },
     };
-    it('should return empty list', () => {
+    it('should return empty data', () => {
       const actual = selectPopulationData({ population: initialState });
-      expect(actual).toEqual([]);
+      expect(actual).toEqual(emptyPopulationData);
     });
-    it('should return empty list when prefecture unchecked', () => {
+    it('should return empty data when prefecture unchecked', () => {
       const actual = selectPopulationData({ population });
-      expect(actual).toEqual([]);
+      expect(actual).toEqual(emptyPopulationData);
     });
     it('should return empty list when unknown checked', () => {
       const actual = selectPopulationData({
         population: { ...population, checkedPrefs: ['99'] },
       });
-      expect(actual).toEqual([]);
+      expect(actual).toEqual(emptyPopulationData);
     });
     it('should return populationData when one prefecture checked', () => {
       const actual = selectPopulationData({

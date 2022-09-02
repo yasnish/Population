@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useMemo, useState } from 'react';
+import React, { FC, useCallback, useState } from 'react';
 import {
   LineChart,
   Line,
@@ -8,7 +8,6 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
-  Label,
 } from 'recharts';
 
 import { useAppSelector } from '../../../app/hooks';
@@ -28,11 +27,6 @@ const PopulationGraph: FC = () => {
   const prefectureMap = useAppSelector(selectPrefectureMap);
 
   const [colorCodes, setColorCodes] = useState<Record<PrefCode, string>>({});
-
-  const hasCheckedPrefs = useMemo(
-    () => checkedPrefs.length > 0,
-    [checkedPrefs.length]
-  );
 
   const renderLine = useCallback(
     (prefCode: PrefCode) => {
@@ -90,14 +84,8 @@ const PopulationGraph: FC = () => {
         }}
       >
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis
-          dataKey="year"
-          tickFormatter={renderYearLabel}
-          hide={!hasCheckedPrefs}
-        />
-        <YAxis tickFormatter={renderPopulationLabel} hide={!hasCheckedPrefs}>
-          <Label value="人口" angle={-90} offset={-20} position="insideLeft" />
-        </YAxis>
+        <XAxis dataKey="year" tickFormatter={renderYearLabel} />
+        <YAxis tickFormatter={renderPopulationLabel} />
         <Tooltip
           labelFormatter={renderTooltipLabel}
           formatter={renderTooltipText}

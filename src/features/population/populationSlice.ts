@@ -126,13 +126,33 @@ export const selectPrefectureMap = createSelector(
   }
 );
 
+export const emptyPopulationData = [
+  { year: '1960' },
+  { year: '1965' },
+  { year: '1970' },
+  { year: '1975' },
+  { year: '1980' },
+  { year: '1985' },
+  { year: '1990' },
+  { year: '1995' },
+  { year: '2000' },
+  { year: '2005' },
+  { year: '2010' },
+  { year: '2015' },
+  { year: '2020' },
+  { year: '2025' },
+  { year: '2030' },
+  { year: '2035' },
+  { year: '2040' },
+  { year: '2045' },
+];
 export const selectPopulationData = createSelector(
   selectCheckedPrefs,
   selectCompositions,
   (checkedPrefs, compositions) => {
     // when all not checked
     if (checkedPrefs.length === 0) {
-      return [];
+      return emptyPopulationData;
     }
 
     const populationData: {
@@ -147,7 +167,12 @@ export const selectPopulationData = createSelector(
         };
       });
     });
-    return Object.keys(populationData).map((year) => {
+    const years = Object.keys(populationData);
+    if (years.length === 0) {
+      // when unknown pref checked
+      return emptyPopulationData;
+    }
+    return years.map((year) => {
       return { year, ...populationData[year] };
     });
   }
