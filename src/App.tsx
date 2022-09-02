@@ -1,5 +1,5 @@
 import ErrorBoundary from './app/ErrorBoundary';
-import { Population } from './features/population/Population';
+import Population from './features/population/Population';
 import './App.css';
 
 const App = () => {

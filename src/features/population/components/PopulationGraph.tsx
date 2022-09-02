@@ -22,7 +22,7 @@ import {
   selectPrefectureMap,
 } from '../populationSlice';
 
-export const PopulationGraph: FC = () => {
+const PopulationGraph: FC = () => {
   const checkedPrefs = useAppSelector(selectCheckedPrefs);
   const populationData = useAppSelector(selectPopulationData);
   const prefectureMap = useAppSelector(selectPrefectureMap);
@@ -108,3 +108,5 @@ export const PopulationGraph: FC = () => {
     </ResponsiveContainer>
   );
 };
+
+export default PopulationGraph;

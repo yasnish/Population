@@ -47,13 +47,20 @@
     "eslint-plugin-import": "^2.26.0",
     "husky": "^8.0.1",
     "lint-staged": "^13.0.3",
+    "msw": "^0.46.1",
     "prettier": "^2.7.1",
-    "redux-logger": "^3.0.6"
+    "redux-logger": "^3.0.6",
+    "resize-observer-polyfill": "^1.5.1"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
       "eslint --cache --fix --max-warnings=0",
       "prettier --write"
+    ]
+  },
+  "jest": {
+    "transformIgnorePatterns": [
+      "<rootDir>/node_modules/(?!d3-*|internmap)"
     ]
   },
   "homepage": "/Population/"

@@ -1,4 +1,4 @@
-import { FC, useCallback, useMemo } from 'react';
+import { FC, useCallback, useEffect, useMemo, useRef } from 'react';
 
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import {
@@ -10,14 +10,26 @@ import {
   selectPrefectures,
   setCheckedPrefs,
 } from '../populationSlice';
+import { getPrefectures } from '../populationSlice';
 
 import styles from './PrefectureList.module.css';
 
-export const PrefectureList: FC = () => {
+const PrefectureList: FC = () => {
   const prefectures = useAppSelector(selectPrefectures);
   const checkedPrefs = useAppSelector(selectCheckedPrefs);
   const compositions = useAppSelector(selectCompositions);
   const dispatch = useAppDispatch();
+
+  // for called twice in StrictMode
+  const firstUpdate = useRef(true);
+
+  useEffect(() => {
+    if (firstUpdate.current) {
+      firstUpdate.current = false;
+      dispatch(getPrefectures());
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const fetchCompositions = useCallback(
     (prefCode: PrefCode) => {
@@ -62,3 +74,5 @@ export const PrefectureList: FC = () => {
 
   return <ul className={styles.list}>{checkBoxes}</ul>;
 };
+
+export default PrefectureList;
