@@ -8,6 +8,27 @@
 
 .item {
   float: left;
+  margin: 8px 5px;
+}
+
+.label {
+  cursor: pointer;
+}
+
+.label input {
+  display: none;
+}
+.label span {
+  color: #333;
+  border: 1px solid #333;
+  border-radius: 15px;
+  font-size: 14px;
+  padding: 5px 15px;
+}
+.label input:checked + span {
+  color: #fff;
+  background: #55f;
+  border: 1px solid #00f;
 }
 
 @media screen and (max-width: 800px) {

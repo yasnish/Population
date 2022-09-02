@@ -57,7 +57,7 @@ const PrefectureList: FC = () => {
       prefectures.map(({ prefCode, prefName }: Prefecture) => {
         return (
           <li key={prefCode} className={styles.item}>
-            <label>
+            <label className={styles.label}>
               <input
                 type="checkbox"
                 value={prefCode}
