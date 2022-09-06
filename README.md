@@ -30,7 +30,14 @@ cd Population
 npm install
 ```
 
-3. Run the app locally.
+3. Create .env and set [RESAS API](https://opendata.resas-portal.go.jp/) key
+
+```
+cp .env.sample .env
+# edit REACT_APP_RESAS_API_KEY
+```
+
+4. Run the app locally.
 
 ```
 npm start
