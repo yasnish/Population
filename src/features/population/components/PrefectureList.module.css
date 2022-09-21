@@ -15,9 +15,6 @@
   cursor: pointer;
 }
 
-.label input {
-  display: none;
-}
 .label span {
   color: #333;
   border: 1px solid #333;
@@ -29,6 +26,17 @@
   color: #fff;
   background: #55f;
   border: 1px solid #00f;
+}
+.label input[type='checkbox'] {
+  filter: alpha(opacity=0);
+  -moz-opacity: 0;
+  opacity: 0;
+  -webkit-appearance: none;
+  appearance: none;
+  position: absolute;
+}
+.label input[type='checkbox']:focus + span {
+  box-shadow: 0 0 4px #004aa1;
 }
 
 @media screen and (max-width: 800px) {
